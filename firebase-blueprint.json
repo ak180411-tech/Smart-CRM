@@ -1,0 +1,79 @@
+{
+  "entities": {
+    "Lead": {
+      "title": "Lead",
+      "description": "A residential solar sales lead and pipeline opportunity",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "customerName": { "type": "string" },
+        "contact": { "type": "string" },
+        "phone": { "type": "string" },
+        "status": { "type": "string" },
+        "propertyDetails": { "type": "string" },
+        "email": { "type": "string" },
+        "address": { "type": "string" },
+        "city": { "type": "string" },
+        "state": { "type": "string" },
+        "zip": { "type": "string" },
+        "monthlyElectricBill": { "type": "number" },
+        "averageKWhUsage": { "type": "number" },
+        "roofType": { "type": "string" },
+        "sunExposure": { "type": "string" },
+        "pipelineStage": { "type": "string" },
+        "estimatedSystemSizeKw": { "type": "number" },
+        "estimatedValue": { "type": "number" },
+        "notes": { "type": "string" },
+        "nextFollowUp": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Submission via FieldValue.serverTimestamp()" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Submission via FieldValue.serverTimestamp()" }
+      },
+      "required": ["userId", "customerName", "phone", "pipelineStage", "createdAt"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "A residential solar installation project with workflow tracking",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "leadId": { "type": "string" },
+        "customerName": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "address": { "type": "string" },
+        "city": { "type": "string" },
+        "state": { "type": "string" },
+        "zip": { "type": "string" },
+        "systemSizeKw": { "type": "number" },
+        "panelBrand": { "type": "string" },
+        "panelCount": { "type": "integer" },
+        "inverterType": { "type": "string" },
+        "batteryModel": { "type": "string" },
+        "hasBattery": { "type": "boolean" },
+        "totalContractPrice": { "type": "number" },
+        "depositPaid": { "type": "number" },
+        "financingType": { "type": "string" },
+        "projectStage": { "type": "string" },
+        "utilityProvider": { "type": "string" },
+        "panelUpgradeRequired": { "type": "boolean" },
+        "installationDate": { "type": "string" },
+        "targetPtoDate": { "type": "string" },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Submission via FieldValue.serverTimestamp()" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Submission via FieldValue.serverTimestamp()" }
+      },
+      "required": ["userId", "customerName", "phone", "projectStage", "totalContractPrice", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/leads/{leadId}": {
+      "schema": { "$ref": "#/entities/Lead" },
+      "description": "Sales leads and pipeline stages managed by a user"
+    },
+    "/users/{userId}/projects/{projectId}": {
+      "schema": { "$ref": "#/entities/Project" },
+      "description": "Residential installation projects tracked through execution stages"
+    }
+  }
+}

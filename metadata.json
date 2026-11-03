@@ -1,0 +1,6 @@
+{
+  "name": "SolarPulse",
+  "description": "Solar CRM system for managing residential installation projects and tracking lead pipelines.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

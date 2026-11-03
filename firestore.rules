@@ -1,0 +1,129 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global deny-all fallback
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidLead(data) {
+      return data.userId is string && data.userId.size() <= 128 &&
+             data.customerName is string && data.customerName.size() >= 1 && data.customerName.size() <= 120 &&
+             data.phone is string && data.phone.size() >= 5 && data.phone.size() <= 40 &&
+             (!('name' in data) || data.name == null || (data.name is string && data.name.size() <= 120)) &&
+             (!('contact' in data) || data.contact == null || (data.contact is string && data.contact.size() <= 120)) &&
+             (!('status' in data) || data.status == null || (data.status is string && data.status.size() <= 50)) &&
+             (!('propertyDetails' in data) || data.propertyDetails == null || (data.propertyDetails is string && data.propertyDetails.size() <= 500)) &&
+             (!('email' in data) || data.email == null || (data.email is string && data.email.size() <= 120)) &&
+             (!('address' in data) || data.address == null || (data.address is string && data.address.size() <= 200)) &&
+             (!('city' in data) || data.city == null || (data.city is string && data.city.size() <= 100)) &&
+             (!('state' in data) || data.state == null || (data.state is string && data.state.size() <= 50)) &&
+             (!('zip' in data) || data.zip == null || (data.zip is string && data.zip.size() <= 20)) &&
+             (!('monthlyElectricBill' in data) || data.monthlyElectricBill == null || (data.monthlyElectricBill is number && data.monthlyElectricBill >= 0)) &&
+             (!('averageKWhUsage' in data) || data.averageKWhUsage == null || (data.averageKWhUsage is number && data.averageKWhUsage >= 0)) &&
+             (!('roofType' in data) || data.roofType == null || (data.roofType is string && data.roofType.size() <= 50)) &&
+             (!('sunExposure' in data) || data.sunExposure == null || (data.sunExposure is string && data.sunExposure.size() <= 50)) &&
+             data.pipelineStage is string && data.pipelineStage.size() <= 50 &&
+             (!('estimatedSystemSizeKw' in data) || data.estimatedSystemSizeKw == null || (data.estimatedSystemSizeKw is number && data.estimatedSystemSizeKw >= 0)) &&
+             (!('estimatedValue' in data) || data.estimatedValue == null || (data.estimatedValue is number && data.estimatedValue >= 0)) &&
+             (!('notes' in data) || data.notes == null || (data.notes is string && data.notes.size() <= 2000)) &&
+             (!('nextFollowUp' in data) || data.nextFollowUp == null || (data.nextFollowUp is string && data.nextFollowUp.size() <= 60)) &&
+             (!('updatedAt' in data) || data.updatedAt == null || (data.updatedAt is timestamp && data.updatedAt <= request.time));
+    }
+
+    function isValidProject(data) {
+      return data.userId is string && data.userId.size() <= 128 &&
+             (!('leadId' in data) || data.leadId == null || (data.leadId is string && data.leadId.size() <= 128)) &&
+             data.customerName is string && data.customerName.size() >= 1 && data.customerName.size() <= 120 &&
+             data.phone is string && data.phone.size() >= 5 && data.phone.size() <= 40 &&
+             (!('email' in data) || data.email == null || (data.email is string && data.email.size() <= 120)) &&
+             (!('address' in data) || data.address == null || (data.address is string && data.address.size() <= 200)) &&
+             (!('city' in data) || data.city == null || (data.city is string && data.city.size() <= 100)) &&
+             (!('state' in data) || data.state == null || (data.state is string && data.state.size() <= 50)) &&
+             (!('zip' in data) || data.zip == null || (data.zip is string && data.zip.size() <= 20)) &&
+             (!('systemSizeKw' in data) || data.systemSizeKw == null || (data.systemSizeKw is number && data.systemSizeKw >= 0)) &&
+             (!('panelBrand' in data) || data.panelBrand == null || (data.panelBrand is string && data.panelBrand.size() <= 120)) &&
+             (!('panelCount' in data) || data.panelCount == null || (data.panelCount is int && data.panelCount >= 0)) &&
+             (!('inverterType' in data) || data.inverterType == null || (data.inverterType is string && data.inverterType.size() <= 120)) &&
+             (!('batteryModel' in data) || data.batteryModel == null || (data.batteryModel is string && data.batteryModel.size() <= 120)) &&
+             (!('hasBattery' in data) || data.hasBattery == null || data.hasBattery is bool) &&
+             data.totalContractPrice is number && data.totalContractPrice >= 0 &&
+             (!('depositPaid' in data) || data.depositPaid == null || (data.depositPaid is number && data.depositPaid >= 0)) &&
+             (!('financingType' in data) || data.financingType == null || (data.financingType is string && data.financingType.size() <= 50)) &&
+             data.projectStage is string && data.projectStage.size() <= 50 &&
+             (!('utilityProvider' in data) || data.utilityProvider == null || (data.utilityProvider is string && data.utilityProvider.size() <= 100)) &&
+             (!('panelUpgradeRequired' in data) || data.panelUpgradeRequired == null || data.panelUpgradeRequired is bool) &&
+             (!('installationDate' in data) || data.installationDate == null || (data.installationDate is string && data.installationDate.size() <= 60)) &&
+             (!('targetPtoDate' in data) || data.targetPtoDate == null || (data.targetPtoDate is string && data.targetPtoDate.size() <= 60)) &&
+             (!('notes' in data) || data.notes == null || (data.notes is string && data.notes.size() <= 2000)) &&
+             (!('updatedAt' in data) || data.updatedAt == null || (data.updatedAt is timestamp && data.updatedAt <= request.time));
+    }
+
+    match /users/{userId} {
+      match /leads/{leadId} {
+        allow get, list: if isSignedIn() && request.auth.uid == userId;
+
+        allow create: if isSignedIn() &&
+                         request.auth.uid == userId &&
+                         isValidId(leadId) &&
+                         incoming().userId == request.auth.uid &&
+                         incoming().keys().hasAll(['userId', 'customerName', 'phone', 'pipelineStage', 'createdAt']) &&
+                         incoming().createdAt is timestamp &&
+                         incoming().createdAt <= request.time &&
+                         isValidLead(incoming());
+
+        allow update: if isSignedIn() &&
+                         request.auth.uid == userId &&
+                         isValidId(leadId) &&
+                         incoming().userId == existing().userId &&
+                         incoming().createdAt == existing().createdAt &&
+                         isValidLead(incoming());
+
+        allow delete: if isSignedIn() &&
+                         request.auth.uid == userId &&
+                         isValidId(leadId);
+      }
+
+      match /projects/{projectId} {
+        allow get, list: if isSignedIn() && request.auth.uid == userId;
+
+        allow create: if isSignedIn() &&
+                         request.auth.uid == userId &&
+                         isValidId(projectId) &&
+                         incoming().userId == request.auth.uid &&
+                         incoming().keys().hasAll(['userId', 'customerName', 'phone', 'projectStage', 'totalContractPrice', 'createdAt']) &&
+                         incoming().createdAt is timestamp &&
+                         incoming().createdAt <= request.time &&
+                         isValidProject(incoming());
+
+        allow update: if isSignedIn() &&
+                         request.auth.uid == userId &&
+                         isValidId(projectId) &&
+                         incoming().userId == existing().userId &&
+                         incoming().createdAt == existing().createdAt &&
+                         isValidProject(incoming());
+
+        allow delete: if isSignedIn() &&
+                         request.auth.uid == userId &&
+                         isValidId(projectId);
+      }
+    }
+  }
+}
